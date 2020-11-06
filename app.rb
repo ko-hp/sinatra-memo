@@ -10,7 +10,7 @@ NO_TITLE_ALERT_MESSAGE = 'タイトルが入力されていません'
 
 helpers do
   def find_memo
-    @memo_store.find(params['memo_uuid'])
+    @memo_store.find(params['memo_id'])
   end
 end
 
@@ -27,38 +27,33 @@ end
 post '/' do
   redirect '/new?no_title=true' if params[:title].empty?
 
-  memo = Memo.new(params[:title], params[:body])
-  @memo_store.add(memo)
-  redirect "/#{memo.uuid}"
+  memo = @memo_store.add(params[:title], params[:body])
+  redirect "/#{memo.id}"
 end
 
 get '/new' do
-  @memo = Memo.new('', '')
+  @memo = Memo.new
   haml :new
 end
 
-get '/:memo_uuid' do
+get '/:memo_id' do
   @memo = find_memo
   haml :show
 end
 
-patch '/:memo_uuid' do
-  @memo = find_memo
-  redirect "/#{@memo.uuid}/edit?no_title=true" if params[:title].empty?
+patch '/:memo_id' do
+  redirect "#{request.path_info}/edit?no_title=true" if params[:title].empty?
 
-  @memo.title = params[:title]
-  @memo.body = params[:body]
-  @memo_store.update(@memo)
-  redirect "/#{@memo.uuid}"
+  @memo_store.update(params['memo_id'], params[:title], params[:body])
+  redirect request.path_info
 end
 
-delete '/:memo_uuid' do
-  @memo = find_memo
-  @memo_store.delete(@memo)
+delete '/:memo_id' do
+  @memo_store.delete(params['memo_id'])
   redirect '/'
 end
 
-get '/:memo_uuid/edit' do
+get '/:memo_id/edit' do
   @memo = find_memo
   haml :edit
 end

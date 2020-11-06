@@ -1,50 +1,51 @@
 # frozen_string_literal: true
 
-require 'csv'
+require 'dotenv/load'
+require 'pg'
 require './memo'
 
 class MemoStore
-  FILENAME = 'data.csv'
-  HEADERS = %i[title body uuid].freeze
-
-  def initialize
-    @table = File.exist?(FILENAME) ? CSV.table(FILENAME) : CSV::Table.new([])
+  def add(title, body)
+    connect_pg do |connection|
+      connection.exec('INSERT INTO Memos (title, body) VALUES ($1, $2)', [title, body])
+      id = connection.exec("SELECT currval('memos_id_seq')").first['currval']
+      Memo.new(id, title, body)
+    end
   end
 
-  def add(memo)
-    @table << memo.to_csv_row(HEADERS)
-    save
+  def update(id, title, body)
+    sql('UPDATE Memos SET title = $1, body = $2 WHERE id = $3', [title, body, id])
   end
 
-  def update(memo)
-    @table[find_index(memo.uuid)] = memo.to_csv_row(HEADERS)
-    save
+  def delete(id)
+    sql('DELETE FROM Memos WHERE id = $1', [id])
   end
 
-  def delete(memo)
-    @table.delete(find_index(memo.uuid))
-    save
-  end
-
-  def find(uuid)
-    MemoStore.row_to_memo(@table[find_index(uuid)])
+  def find(id)
+    row = sql('SELECT id, title, body FROM Memos WHERE id = $1', [id]).first
+    MemoStore.db_row_to_memo(row)
   end
 
   def all_memos
-    @table.map { |row| MemoStore.row_to_memo(row) }
+    sql('SELECT id, title, body FROM Memos ORDER BY id').map do |row|
+      MemoStore.db_row_to_memo(row)
+    end
   end
 
-  def self.row_to_memo(row)
-    Memo.new(row[:title], row[:body], row[:uuid])
+  def self.db_row_to_memo(row)
+    Memo.new(row['id'], row['title'], row['body'])
   end
 
   private
 
-  def find_index(uuid)
-    @table[:uuid].find_index(uuid)
+  def connect_pg
+    connection = PG.connect(host: ENV['host'], user: ENV['user'], password: ENV['password'], dbname: 'sinatra_memo')
+    ret = yield(connection)
+    connection.finish
+    ret
   end
 
-  def save
-    File.write(FILENAME, @table)
+  def sql(query, values = [])
+    connect_pg { |connection| connection.exec(query, values) }
   end
 end
