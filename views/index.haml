@@ -1,0 +1,7 @@
+%h1.uk-heading-bullet メモ一覧
+%ul.uk-list.uk-list.large.uk-list-divider
+  - @memos.each do |memo|
+    %li
+      %a.memo-index{href: "/#{memo.uuid}"}
+        &= memo.title
+%a.uk-button.uk-button-primary{href: "/new"} 新規

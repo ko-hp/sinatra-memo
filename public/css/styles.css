@@ -1,0 +1,41 @@
+html {
+  background: #fcfcfc;
+}
+
+header {
+  background: #ccc;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+.uk-button-edit {
+  background-color: #ffc107;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.uk-button-edit:focus,
+.uk-button-edit:hover {
+  background-color: #dfab0e;
+  color: #fff;
+}
+
+.memo-title {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.memo-body {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.memo-index {
+  display: block;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

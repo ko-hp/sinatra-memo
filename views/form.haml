@@ -1,0 +1,23 @@
+- if @alert
+  .uk-alert-danger{"uk-alert": ""}
+    %a.uk-alert-close{"uk-close": ""}
+    %p
+      = @alert
+%h1.uk-heading-bullet
+  = is_patch ? "編集" : "新規作成"
+%form{action: to(is_patch ? "/#{@memo.uuid}" : "/"), method: "post"}
+  .uk-margin
+    %div
+      %label.uk-form-label タイトル
+      %input.uk-input{type: "text", name: "title", value: @memo.title}
+  .uk-margin
+    %div
+      %label.uk-form-label 内容
+      %textarea.uk-textarea{name: "body", rows: 10}
+        &= @memo.body
+  - if is_patch
+    %input{type: "hidden", name: "_method", value: "patch"}
+  .uk-flex.uk-margin
+    %a.uk-button.uk-button-secondary{href: back[:path]}
+      = back[:text]
+    %input.uk-button.uk-button-primary.uk-margin-left{type: "submit", value: "保存"}

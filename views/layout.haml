@@ -1,0 +1,17 @@
+!!!
+%html{lang: 'ja'}
+  %head
+    %title Sinatra Memo
+    %meta{charset: "UTF-8"}
+    %script{src: "https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit.min.js"}
+    %link{rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css"}
+    %link{rel: "stylesheet", href: "/css/styles.css"}
+  %body
+    %header{'uk-sticky': ''}
+      .uk-container
+        %nav.uk-navbar-transparent.uk-navbar-container.uk-margin{"uk-navbar": ""}
+          .uk-navbar-left
+            %a.uk-navbar-item.uk-logo{href: "/"}
+              Sinatra Memo
+    .uk-container.uk-margin-top.uk-margin-bottom
+      = yield
