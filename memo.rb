@@ -1,19 +1,13 @@
 # frozen_string_literal: true
 
-require 'csv'
 require 'securerandom'
 
 class Memo
-  attr_accessor :title, :body
-  attr_reader :uuid
+  attr_reader :id, :title, :body
 
-  def initialize(title, body, uuid = SecureRandom.uuid)
+  def initialize(id = '', title = '', body = '')
+    @id = id
     @title = title
     @body = body
-    @uuid = uuid
-  end
-
-  def to_csv_row(headers)
-    CSV::Row.new(headers, headers.map { |header| send(header) })
   end
 end

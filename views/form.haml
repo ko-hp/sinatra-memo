@@ -5,7 +5,7 @@
       = @alert
 %h1.uk-heading-bullet
   = is_patch ? "編集" : "新規作成"
-%form{action: to(is_patch ? "/#{@memo.uuid}" : "/"), method: "post"}
+%form{action: to(is_patch ? "/#{@memo.id}" : "/"), method: "post"}
   .uk-margin
     %div
       %label.uk-form-label タイトル

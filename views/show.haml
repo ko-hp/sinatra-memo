@@ -6,6 +6,6 @@
 .uk-flex.uk-margin-top
   %a.uk-button.uk-button-secondary{href: "/"} 一覧へ
   %a.uk-button.uk-button-edit.uk-margin-auto-left{href: "#{request.path_info}/edit"} 編集
-  %form.uk-margin-left{action: "/#{@memo.uuid}", method: "post"}
+  %form.uk-margin-left{action: "/#{@memo.id}", method: "post"}
     %input{type: "hidden", name: "_method", value: "delete"}
     %input.uk-button.uk-button-danger{type: "submit", value: "削除"}
