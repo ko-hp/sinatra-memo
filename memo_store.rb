@@ -40,9 +40,9 @@ class MemoStore
 
   def connect_pg
     connection = PG.connect(host: ENV['host'], user: ENV['user'], password: ENV['password'], dbname: 'sinatra_memo')
-    ret = yield(connection)
+    yield(connection)
+  ensure
     connection.finish
-    ret
   end
 
   def sql(query, values = [])
